@@ -23,6 +23,12 @@ app.permanent_session_lifetime = timedelta(minutes=30)
 
 
 
+
+@app.errorhandler(404)
+def page_not_found(error):
+    # Render a custom 404 page
+    return render_template('404.html'), 404
+
 @app.route("/")
 @app.route("/signin",  methods=['GET', 'POST'])
 def signin():
@@ -266,13 +272,21 @@ def remove_video(filename):
         return redirect(url_for('signin'))
     upload_folder = os.path.join(app.root_path, 'static', 'videos')
     file_path = os.path.join(upload_folder, filename)
-    
     if os.path.exists(file_path):
         os.remove(file_path)
         flash(f"The video '{filename}' has been successfully removed.", "success")
     else:
         flash(f"The video '{filename}' does not exist.", "error")
-    
     return redirect(url_for('show_remove_page'))
+
+@app.route("/logout")
+def logout():
+    """
+    Route for logging out the user.
+
+    Clears the session and redirects to the sign-in page.
+    """
+    session.clear()
+    return redirect(url_for('signin'))
 
 
