@@ -16,9 +16,11 @@
         overflow: hidden;
         margin: 0;
         padding: 0;
+        background-image: none !important;
+        background-color: rgb(38, 141, 236) !important;
       }
     </style>
-    <video id="videoPlayer" autoplay onended="playBackground()">
+    <video id="videoPlayer" autoplay preload="auto">
       <source
         src="{{ url_for('static',  filename= 'videos/' + video_files['background'])}}"
         type="video/mp4"
@@ -34,6 +36,9 @@
         "{{ url_for('static', filename= 'videos/' + video_files['background']) }}";
       var currentVideo = backgroundVideo;
       var backgroundVideoTime = 0; // Variable to track the current time of the background video
+      var videoQueue = []; // Queue to store target numbers and corresponding videos
+      var positionIsPlaying = false; // Flag to indicate if a video is currently playing
+      console.log(positionIsPlaying)
 
       // Function to play the background video
       function playBackground() {
@@ -43,54 +48,96 @@
         backgroundVideoTime = 0;
       }
 
-      // Function to play a specific video
-      function playVideo(position) {
-        // Get the filename for the provided position
-        var filename = video_files[position];
-            if (filename) {
+
+      function playNextVideo() {
+        // Function to play the next video in the queue
+        positionIsPlaying = true
+        if (videoQueue.length > 0) {
+            positionIsPlaying = true
+            var nextVideo = videoQueue.shift(); // Get the next video from the queue
+            var target = nextVideo.target;
+            var filename = nextVideo.filename;
+
+          // Pause the background  video before loading the next one
+            if (videoPlayer.src.endsWith(video_files["background"])) {
               videoPlayer.pause();
-              if (videoPlayer.src.endsWith(video_files["background"])) {
-                backgroundVideoTime = videoPlayer.currentTime;
-              }
-                // Set the source of the video player to the relative video
-                videoPlayer.src = "{{ url_for('static', filename='videos/') }}" + filename;
-                videoPlayer.load();
-                videoPlayer.play();
+              backgroundVideoTime = videoPlayer.currentTime;
+            }
+
+            // Set the source of the video player to the relative video
+            videoPlayer.src = "{{ url_for('static', filename='videos/') }}" + filename;
+            videoPlayer.load();
+            // Ensure the video player resumes playing after the video is loaded
+            videoPlayer.play();
+        } else {
+            positionIsPlaying = false
+            playBackground();
+        }
+      }
+
+
+      videoPlayer.addEventListener('ended', function() {
+        // Event listener to handle the end of the video
+        if (videoQueue.length > 0) {
+            playNextVideo(); // Play the next video in the queue after the current video finishes
+        } else  {
+          positionIsPlaying = false
+            playBackground(); // If the queue is empty and background video is not already playing, resume the background video
+        }
+      });
+
+
+      // Function to play the background video
+      function playBackground() {
+        positionIsPlaying = false
+        videoPlayer.src = backgroundVideo;
+        videoPlayer.currentTime = backgroundVideoTime; // Set current time to the stored value
+        videoPlayer.play();
+        backgroundVideoTime = 0;
+
+      }
+
+      // Function to handle the WebSocket message
+      function handleWebSocketMessage(message) {
+        if (message.ws_id == "Tensator_Websocket_server" && message.cb_id == "CB_123456789" && message.device_type == "Edgelit-button") {
+            var cf_event = message.cmd_info.event;
+            if (cf_event == "Close") {
+                //No action here yet
+            } else if (cf_event == "Open") {
+                var called_position = message.cmd_info.target;
+                var filename = video_files[called_position];
+                if (filename) {
+                    var videoObj = { target: called_position, filename: filename };
+                    videoQueue.push(videoObj);
+                    if (!positionIsPlaying) {
+                        playNextVideo(); // Start playing immediately if no video is currently playing
+                    }
+                }
+            } else if (cf_event == "Busy") {
+                //No action here yet
             }
         }
+      }
+
 
       // Function to initialize WebSocket connection
       function initWebSocket() {
         // Establish WebSocket connection
         websocket = new WebSocket("ws://127.0.0.1:8764");
         websocket.onmessage = function (event) {
-          var message = JSON.parse(event.data);
-          if (message.ws_id == "Tensator_Websocket_server") {
-            if (message.cb_id == "CB_123456789") {
-              if (message.device_type == "Edgelit-button") {
-                var cf_event = message.cmd_info.event;
-                if (cf_event == "Close") {
-                  //No action here yet
-                } else if (cf_event == "Open") {
-                  var called_position = message.cmd_info.target;
-                  //   calledPositionElement.textContent = called_position;
-                  playVideo(called_position);
-                } else if (cf_event == "Busy") {
-                  //No action here yet
-                }
-              }
-            }
-          }
+            var message = JSON.parse(event.data);
+            handleWebSocketMessage(message);
         };
         websocket.onclose = function (event) {
-          // Handle WebSocket closed
-          console.log("WebSocket closed");
+            // Handle WebSocket closed
+            console.log("WebSocket closed");
         };
         websocket.onerror = function (event) {
-          // Handle WebSocket error
-          console.error("WebSocket error:", event);
+            // Handle WebSocket error
+            console.error("WebSocket error:", event);
         };
       }
+
 
       // Initialize WebSocket connection
       initWebSocket();
