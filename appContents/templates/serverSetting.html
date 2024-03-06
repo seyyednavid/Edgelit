@@ -4,6 +4,7 @@ Adjusting Edgelits
 {% endblock %}
 
 {% block content%}
+<div class="setting-container">
 <p class="adjust-paragraph"> Modify the <span class="title-color">Edgelit features</span> according to your preferred specifications.</p>
 <form  class='server-setting' method="POST" action="{{ url_for('edgelit_save') }}">
   <div>
@@ -49,15 +50,15 @@ Adjusting Edgelits
         {% else %}
         <option value="{{j}}">{{j}}</option>
         {% endif %} {% endfor %}
-      </select>
+      </select> 
     </div>
     <div class="styled-element">
-      <label for="on_color{{ i }}">On_Color:</label>
+      <label for="on_color{{ i }}">On_Color  :</label>
       <input type="color" id="on_color{{ i }}" name="on_color{{ i }}" class="styled-element"
       value={{edgeled_settings["on_color"][i-1]}}>
     </div>
     <div>
-      <label for="off_color{{ i }}">Off_Color:</label>
+      <label for="off_color{{ i }}">Off_Color  :</label>
       <input type="color" id="off_color{{ i }}" name="off_color{{ i }}" class="styled-element"
       value={{edgeled_settings["off_color"][i-1]}}>
     </div>
@@ -78,5 +79,6 @@ Adjusting Edgelits
 <div>
   <button type="submit" id="saveButton">Save</button>
 </form>
+</div>
 </div>
 {% endblock%}

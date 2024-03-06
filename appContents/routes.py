@@ -166,6 +166,11 @@ def allowed_file(filename):
     """Check if the filename has a valid .mp4 extension."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def normalize_filename(filename):
+    """Normalize the filename by converting it to lowercase and removing spaces."""
+    parts = filename.strip().split(".")
+    return parts[0].lower().replace(' ', '').replace('_', '') + "." + parts[1]
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     """
@@ -192,14 +197,15 @@ def upload():
             flash('No files selected for upload', 'error')
             return redirect(url_for('upload'))
         
-        # Process uploaded files
+         # Process uploaded files
         for video in uploaded_files:
             if video.filename != '':
                 if allowed_file(video.filename):
-                    filename = secure_filename(video.filename)
+                    # Normalize the filename
+                    filename = normalize_filename(secure_filename(video.filename))
                     # Condition for accepting video file names:
                     # The filename must be 'background.mp4' or a numeric value between 1.mp4 and 100.mp4    
-                    if filename.lower() == 'background.mp4' or (filename.endswith('.mp4') and filename[:-4].isdigit() and 1 <= int(filename[:-4]) <= 100):
+                    if filename == 'background.mp4' or (filename.endswith('.mp4') and filename[:-4].isdigit() and 1 <= int(filename[:-4]) <= 100):
                         video.save(os.path.join(upload_folder, filename))
                     else:
                         flash('Invalid filename. Video names must be between 1.mp4 and 100.mp4, including background.mp4', 'error')

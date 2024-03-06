@@ -14,6 +14,13 @@ content %}
   <ol>
     {% for video_file in video_files %}
     <li>
+      <span class="position">
+        {% if video_file.startswith('background') %}
+          background
+        {% else %}
+          position {{video_file.split('.')[0]}}
+        {% endif %}
+      </span>
       {{ video_file|safe }}
       <button onclick="confirmRemoval('{{ video_file|safe }}')">Remove</button>
     </li>

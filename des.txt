@@ -1,1 +1,8 @@
-1- handle the videos , they play in order completely
+1 - handle the videos , they play in order completely
+2 - work on styling
+    2-1 : height for all pages
+    2-2 : change input size in setting page in mobile size
+    2-3: apply specific size for header and footer
+3 - upload page => add position for each videos
+4 - navbar => move home to the right side
+5 - upload => define some to condition to get unusual name and tern it to usual name and save it.

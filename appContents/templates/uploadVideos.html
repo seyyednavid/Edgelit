@@ -1,10 +1,6 @@
 {% extends 'base.html' %} {% block title %} Upload videos {% endblock %} {%
 block content%}
-<style>
-  body {
-    overflow: hidden;
-  }
-</style>
+
 <div class="upload-container">
   <h1 class="upload-header"> <span class="title-color">Upload</span> Your New Videos</h1>
   <div id="flash-messages" >
@@ -17,7 +13,7 @@ block content%}
   </div>
   <form class="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
     <input type="file" name="video" accept=".mp4" multiple>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Upload">
 </form>
 </div>
 <script>

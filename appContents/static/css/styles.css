@@ -11,6 +11,9 @@ body {
   font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
 }
+.header {
+  height: 15vh;
+}
 #videoPlayer {
   width: 100%;
   height: 100%;
@@ -66,13 +69,15 @@ body {
   color: white;
 }
 
+
 /* Main page */
-.main {
-  height: 80.5vh;
+.main-page {
+  height: 81vh;
+  overflow: hidden;
 }
 .main-paragraph {
   font-size: 3rem;
-  margin: 5rem;
+  margin-bottom: 2rem;
   text-align: center;
 }
 .main-btns {
@@ -100,6 +105,7 @@ body {
   transition: all 0.2s ease;
   border: none;
   background: none;
+  z-index: 0;
 }
 .btn-color-1:before {
   content: "";
@@ -108,7 +114,7 @@ body {
   left: 0;
   display: block;
   border-radius: 10px;
-  background: white;
+  background:none;
   width: 50px;
   height: 50px;
   transition: all 0.3s ease;
@@ -119,7 +125,6 @@ body {
   font-size: 25px;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: black;
 }
 .btn-color-1 svg {
   position: relative;
@@ -146,6 +151,9 @@ body {
 }
 
 /* Server Setting page */
+.setting-container {
+  min-height: 81vh;
+}
 .server-setting {
   display: flex;
   flex-direction: column;
@@ -203,7 +211,7 @@ body {
   color: black;
   text-align: center;
   font-size: 2rem;
-  margin: 5rem 1rem 0 1rem;
+  margin: 0rem 1rem 0 1rem;
 }
 .styled-element {
   border-radius: 5px;
@@ -276,7 +284,7 @@ body {
   justify-content: flex-start;
   align-items: center;
   height: 81vh;
-  margin-top: 5rem;
+  /* margin-top: 0.5rem; */
 }
 .upload-header {
   font-size: 2rem;
@@ -311,8 +319,9 @@ input[type="submit"]:hover {
 /* Remove video page */
 .container-removeVideo {
   max-width: 800px;
-  margin: 2rem auto 0 auto;
+  margin: 0rem auto 0 auto;
   padding: 20px;
+  min-height: 81vh;
 }
 .container-removeVideo h1 {
   text-align: center;
@@ -333,9 +342,7 @@ input[type="submit"]:hover {
   box-shadow: 2px 2px 10px rgba(25, 133, 40, 0.22);
   background-color: white;
 }
-.container-removeVideo li::before {
-  content: "Video " counter(item) " -";
-  counter-increment: item;
+.container-removeVideo li .position {
   font-weight: bold;
   color: #b42036;
 }
@@ -357,7 +364,7 @@ input[type="submit"]:hover {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 5rem;
+  margin-top: 3rem;
 }
 .container-404 img {
   max-width: 80%; 
@@ -391,6 +398,7 @@ input[type="submit"]:hover {
 
 /*footer  */
 .footer {
+  height: 5vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -415,12 +423,6 @@ input[type="submit"]:hover {
   }
 }
 
-@media screen and (max-width: 1330px) {
-  /* Upload page */
-  .upload-container {
-    height: 80vh;
-  }
-}
 
 /* Tablet styles */
 @media screen and (max-width: 768px) {
@@ -439,6 +441,9 @@ input[type="submit"]:hover {
     background-color: inherit;
   }
   /* Main page */
+  .main-page {
+    overflow:scroll !important
+  }
   .main-paragraph {
     font-size: 2rem;
   }
@@ -453,9 +458,7 @@ input[type="submit"]:hover {
     width: 45px;
     height: 45px;
   }
-  .main {
-    height: 81.3vh;
-  }
+
   /* Sign in page  */
   .flash-message.error {
     color: red;
@@ -474,10 +477,6 @@ input[type="submit"]:hover {
   }
   input[type="submit"] {
     padding: 0.45rem;
-  }
-  /* Upload page */
-  .upload-container {
-    height: 81.5vh;
   }
   /* errorhandler page */
   .container-404 h1 {
@@ -537,7 +536,6 @@ input[type="submit"]:hover {
   /* Sign in page  */
   .signin-form {
     width: 100%;
-    /* margin-left: 4rem; */
   }
   .logo {
     width: 280px;
@@ -550,6 +548,14 @@ input[type="submit"]:hover {
   .container-removeVideo li {
     flex-direction: column;
     gap: 1rem;
+  }
+  /* setting */
+  .server-setting li input {
+    width:55px
+  }
+  .server-setting li select {
+    font-size: 15px;
+    width:70px
   }
 }
 
