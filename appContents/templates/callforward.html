@@ -40,17 +40,19 @@
       var positionIsPlaying = false; // Flag to indicate if a video is currently playing
       console.log(positionIsPlaying)
 
+
       // Function to play the background video
       function playBackground() {
+        positionIsPlaying = false
         videoPlayer.src = backgroundVideo;
         videoPlayer.currentTime = backgroundVideoTime; // Set current time to the stored value
         videoPlayer.play();
         backgroundVideoTime = 0;
       }
 
-
+      
+      // Function to play the next video in the queue
       function playNextVideo() {
-        // Function to play the next video in the queue
         positionIsPlaying = true
         if (videoQueue.length > 0) {
             positionIsPlaying = true
@@ -63,7 +65,6 @@
               videoPlayer.pause();
               backgroundVideoTime = videoPlayer.currentTime;
             }
-
             // Set the source of the video player to the relative video
             videoPlayer.src = "{{ url_for('static', filename='videos/') }}" + filename;
             videoPlayer.load();
@@ -76,8 +77,8 @@
       }
 
 
+      // Event listener to handle the end of the video
       videoPlayer.addEventListener('ended', function() {
-        // Event listener to handle the end of the video
         if (videoQueue.length > 0) {
             playNextVideo(); // Play the next video in the queue after the current video finishes
         } else  {
@@ -86,16 +87,6 @@
         }
       });
 
-
-      // Function to play the background video
-      function playBackground() {
-        positionIsPlaying = false
-        videoPlayer.src = backgroundVideo;
-        videoPlayer.currentTime = backgroundVideoTime; // Set current time to the stored value
-        videoPlayer.play();
-        backgroundVideoTime = 0;
-
-      }
 
       // Function to handle the WebSocket message
       function handleWebSocketMessage(message) {
